@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101018">
+<title>mops11 — каталог игр</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101018;color:#f5f5fa;font-family:Arial,sans-serif}
+header{padding:22px 6%;background:#191923;border-bottom:1px solid #30303d}
+.logo{font-size:32px;font-weight:900;color:#a78bfa}
+header p{color:#aaa;margin-bottom:0}
+nav{display:flex;gap:18px;margin-top:18px;flex-wrap:wrap}
+a{color:#c4b5fd;text-decoration:none}
+.hero{padding:48px 6%;background:linear-gradient(130deg,#29204c,#141421)}
+.hero h1{font-size:clamp(30px,6vw,52px);margin:0 0 12px}
+.hero p{color:#d1d1df;line-height:1.6}
+main{padding:25px 6% 60px}
+.search{width:100%;padding:15px;border-radius:12px;border:1px solid #393947;background:#1b1b27;color:white;font-size:16px;margin-bottom:24px}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.card{background:#1b1b27;border:1px solid #30303d;border-radius:16px;overflow:hidden;transition:.2s}
+.card:hover{transform:translateY(-4px);border-color:#8b5cf6}
+.cover{height:145px;display:flex;align-items:center;justify-content:center;font-size:55px;background:linear-gradient(135deg,#34245a,#25253b)}
+.info{padding:17px}
+.info h3{margin:0 0 9px}
+.info p{font-size:14px;line-height:1.5;color:#b6b6c8;min-height:40px}
+.tag{font-size:12px;background:#302747;padding:5px 9px;border-radius:20px;color:#d8ccff}
+.download{display:block;text-align:center;background:#8b5cf6;color:white;padding:12px;border-radius:9px;font-weight:bold;margin-top:15px}
+.download:hover{background:#7c3aed}
+.empty{display:none;color:#aaa;padding:20px 0}
+footer{padding:28px 6%;background:#191923;color:#aaa;font-size:13px;line-height:1.7}
+button{cursor:pointer}
+@media(max-width:480px){header,main{padding-left:5%;padding-right:5%}.hero{padding:35px 5%}.games{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">mops11</div>
+  <p>Твой каталог компьютерных и мобильных игр</p>
+  <nav>
+    <a href="#home">Главная</a>
+    <a href="#games">Игры</a>
+    <a href="#about">О сайте</a>
+  </nav>
+</header>
+
+<section class="hero" id="home">
+  <h1>Играй. Скачивай. Открывай.</h1>
+  <p>Добро пожаловать на mops11 — место, где можно найти игры для разных устройств.</p>
+  <a href="#games" class="download" style="display:inline-block">Смотреть каталог ↓</a>
+</section>
+
+<main id="games">
+  <div class="section-title">
+    <h2>🎮 Каталог игр</h2>
+    <span id="count" class="tag">3 игры</span>
+  </div>
+
+  <input class="search" id="search" type="search"
+         placeholder="🔎 Найти игру..." aria-label="Поиск игр">
+
+  <div class="games" id="gamesList"></div>
+  <p class="empty" id="empty">Игры не найдены. Попробуй другой запрос.</p>
+</main>
+
+<footer id="about">
+  <strong style="color:white">mops11</strong><br>
+  Каталог игр для разных платформ.<br>
+  Загружай только те файлы, на распространение которых у тебя есть права.
+  Перед запуском скачанных файлов проверяй их антивирусом.
+</footer>
+
+<script>
+const games = [
+  {
+    name: "Minecraft",
+    icon: "🧱",
+    type: "PC / Android",
+    description: "Исследуй мир, строй дома и создавай собственные приключения.",
+    url: "",
+    format: "ZIP"
+  },
+  {
+    name: "Chicken Gun",
+    icon: "🐔",
+    type: "Android",
+    description: "Весёлые сражения и необычные персонажи.",
+    url: "",
+    format: "APK"
+  },
+  {
+    name: "Моя первая игра",
+    icon: "🎮",
+    type: "PC",
+    description: "Здесь будет описание твоей собственной игры.",
+    url: "",
+    format: "ZIP"
+  }
+];
+
+const list = document.getElementById("gamesList");
+const search = document.getElementById("search");
+const empty = document.getElementById("empty");
+const count = document.getElementById("count");
+
+function renderGames() {
+  const query = search.value.trim().toLowerCase();
+  const filtered = games.filter(g =>
+    (g.name + " " + g.type + " " + g.description + " " + g.format)
+      .toLowerCase().includes(query)
+  );
+
+  list.innerHTML = "";
+  count.textContent = filtered.length + " игр";
+  empty.style.display = filtered.length ? "none" : "block";
+
+  filtered.forEach(game => {
+    const card = document.createElement("article");
+    card.className = "card";
+
+    const cover = document.createElement("div");
+    cover.className = "cover";
+    cover.textContent = game.icon;
+
+    const info = document.createElement("div");
+    info.className = "info";
+
+    const title = document.createElement("h3");
+    title.textContent = game.name;
+
+    const tag = document.createElement("span");
+    tag.className = "tag";
+    tag.textContent = game.type + " · " + game.format;
+
+    const description = document.createElement("p");
+    description.textContent = game.description;
+
+    const link = document.createElement("a");
+    link.className = "download";
+
+    if (game.url && /^https?:\/\//i.test(game.url)) {
+      link.href = game.url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "⬇ Скачать игру";
+    } else {
+      link.href = "#";
+      link.textContent = "Скоро появится";
+      link.style.background = "#414152";
+      link.addEventListener("click", e => e.preventDefault());
+    }
+
+    info.append(title, tag, description, link);
+    card.append(cover, info);
+    list.append(card);
+  });
+}
+
+search.addEventListener("input", renderGames);
+renderGames();
+</script>
+</body>
+</html>
